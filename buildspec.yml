@@ -1,0 +1,40 @@
+version: 0.2
+
+env:
+  variables:
+    FOO_DIR: src/github.com/andytl6/gonzoCB
+
+phases:
+  install:
+    commands:
+      - echo Build started on `date`
+      - echo "ENV Vars"
+      - echo "========"
+      - env
+      - echo Installing Go Dep...
+      - curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
+  pre_build:
+    commands:
+      - echo Resolving Dependencies...    
+      - dep ensure      
+      - echo Debugging...
+      - echo GOPATH contents...
+      - if [ -e /go/src/github.com/andytl6/gonzoCB ]; then ls -al /go/src/github.com/andytl6/gonzoCB; fi
+      - ls -al $PWD/../
+      - echo PWD contents..
+      - ls -al $PWD
+  build:
+    commands:
+      - echo Compiling gonzo binary for amd64 Linux...
+      - env GOOS=linux GOARCH=amd64 go build -o gonzo main.go
+      - echo Compiling gonzo executable for amd64 Windows...
+      - env GOOS=windows GOARCH=amd64 go build -o gonzo.exe main.go
+  post_build:
+    commands:
+      - echo Build completed on `date`
+artifacts:
+  files:
+    - gonzo
+    - gonzo.exe
+    - appspec.yml
+  discard-paths: yes

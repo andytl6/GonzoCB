@@ -1,0 +1,5 @@
+gonzo
+gonzo.exe
+*.sw*
+*.tfstate*
+*.terraform*
